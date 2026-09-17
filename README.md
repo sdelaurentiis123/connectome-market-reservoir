@@ -4,6 +4,17 @@ Research scaffold for testing a fixed *Drosophila* connectome subgraph as a recu
 
 This is a research project, **not a trading system or financial advice**. The honest question is whether evolved graph topology offers useful memory or nonlinear separation relative to matched random reservoirs. It is not "a fly brain that trades."
 
+## 30-second picture
+
+```text
+causal market features -> fixed connectome reservoir -> probability / regime score
+                                                        |
+                                                        +-> paper broker -> fills, position, PnL
+connectome result <-------- same backtest as linear, ESN and rewired-graph nulls
+```
+
+This is a paper-trading experiment, not alpha. The connectome is a fixed recurrent wiring prior. The test is whether it improves held-out probability or regime forecasts after executable prices, fees and slippage, compared with simpler models and matched random graphs. Polymarket and Kalshi event series are valid alternate inputs when snapshots are causal.
+
 ## Targets
 
 Prefer targets with a defensible signal-to-noise ratio:
@@ -40,7 +51,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 pytest
-python -m connectome_market.demo
+python demo.py
 ```
 
 Set `NEUPRINT_TOKEN` only when querying neuPrint. Market data is not bundled; loaders require an explicit local file or adapter.
