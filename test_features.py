@@ -1,5 +1,5 @@
 import pandas as pd
-from connectome_market.features import load_feature_csv
+from features import load_feature_csv
 
 def test_loader_sorts_and_validates(tmp_path):
     path = tmp_path / "features.csv"
