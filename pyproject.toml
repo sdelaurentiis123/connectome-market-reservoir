@@ -12,5 +12,5 @@ dependencies = ["numpy>=1.26", "pandas>=2.2", "networkx>=3.2", "scikit-learn>=1.
 [project.optional-dependencies]
 dev = ["pytest>=8"]
 
-[tool.setuptools]
-py-modules = ["reservoir", "data", "features", "broker", "backtest", "demo"]
+[tool.setuptools.packages.find]
+where = ["src"]
