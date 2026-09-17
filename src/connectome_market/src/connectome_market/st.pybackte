@@ -1,0 +1,31 @@
+from __future__ import annotations
+from dataclasses import dataclass
+import numpy as np
+from .broker import PaperBroker
+
+@dataclass(frozen=True)
+class BacktestResult:
+    equity: np.ndarray
+    turnover: float
+    max_drawdown: float
+    trades: tuple[dict, ...]
+
+def run_long_flat(prices: np.ndarray, signals: np.ndarray, initial_cash: float = 10_000.0,
+                  fee_bps: float = 1.0, slippage_bps: float = 2.0) -> BacktestResult:
+    prices = np.asarray(prices, dtype=float)
+    signals = np.asarray(signals, dtype=int)
+    if prices.ndim != 1 or prices.shape != signals.shape or len(prices) == 0:
+        raise ValueError("prices and signals must be equal-length 1D arrays")
+    broker = PaperBroker(initial_cash, fee_bps, slippage_bps)
+    equity, turnover = [], 0.0
+    for i, (price, target) in enumerate(zip(prices, signals)):
+        desired = 1.0 if target else 0.0
+        delta = desired - broker.portfolio.position
+        if delta:
+            trade = broker.market_order(delta, float(price), i)
+            turnover += abs(trade["quantity"] * trade["fill_price"])
+        equity.append(broker.portfolio.equity(float(price)))
+    curve = np.asarray(equity)
+    peaks = np.maximum.accumulate(curve)
+    drawdowns = (curve - peaks) / peaks
+    return BacktestResult(curve, turnover, float(drawdowns.min()), tuple(broker.trades))
