@@ -11,3 +11,5 @@ dependencies = ["numpy>=1.26", "pandas>=2.2", "networkx>=3.2", "scikit-learn>=1.
 dev = ["pytest>=8"]
 [tool.setuptools]
 py-modules = ["reservoir", "data", "features", "broker", "backtest", "demo"]
+[tool.pytest.ini_options]
+testpaths = ["test_broker.py", "test_features.py"]
