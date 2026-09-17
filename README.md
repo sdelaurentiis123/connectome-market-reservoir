@@ -38,9 +38,9 @@ Raw next-tick price direction is not the primary target.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install -e ".[dev]"
 pytest
-python demo.py
+python -m connectome_market.demo
 ```
 
 Set `NEUPRINT_TOKEN` only when querying neuPrint. Market data is not bundled; loaders require an explicit local file or adapter.
@@ -73,3 +73,18 @@ Backtesting is core, not a demo afterthought. The intended harness must support:
 ### Prediction markets
 
 The same reservoir can ingest Polymarket or Kalshi contract series: implied probability, bid/ask spread, depth, volume, time-to-expiry, and correlated-contract features. Targets can be probability calibration, regime shifts, or bounded paper-trading policies on binary event contracts. Historical snapshots must be timestamp-aligned and evaluated without using resolution information before it became public.
+
+## Non-negotiable design constraints
+
+1. **Independent N means whole market experiments.** Replication and final validation use held-out market periods, instruments, or event cohorts, not overlapping windows from one trajectory. Purge and embargo all label overlap.
+2. **No pseudo-replication.** Re-running deterministic code does not create seeds. State the independent unit and vary genuinely stochastic graph draws, initializations, instruments/events, and market periods.
+3. **Keep physical/economic variables physical.** Features use causal timestamps and strategies transact at executable bid/ask prices with fees, slippage, latency, and position limits. Midprice hindsight is not a fill.
+4. **Prove state sufficiency before architecture search.** Show that the causal feature history contains predictive information for the target before tuning reservoir topology.
+5. **Null models are the experiment.** Persistence, linear/logistic models, matched echo-state networks, degree-preserving rewires, and matched random graphs receive the same tuning budget, costs, and evaluation.
+6. **Fail closed numerically.** NaNs, infinities, singular fits, and undefined metrics invalidate the run. Never zero-fill or clip them and keep a headline metric.
+7. **Tests test the math.** Tests check causality, split isolation, reservoir updates, fills, accounting, invariants, and failure modes, not only file existence or schema shape.
+8. **One canonical definition per result.** Each target, split, fill, PnL field, and headline metric has one implementation and one recorded provenance.
+9. **Launchers are immutable and non-destructive.** Runs write versioned outputs and fail safely. No broad or unconditional `rm -f`; raw data and prior results stay immutable.
+10. **A clean clone must reproduce the run.** `requirements-lock.txt` records the exact tested environment. Dependency changes require a new lock and clean-environment test.
+11. **Code stays proportional to evidence.** Add infrastructure only when an experiment needs it; do not bury an untested idea under production-shaped code.
+12. **Claims track evidence.** Until repeated held-out evidence exists, call this a scaffold or a paper-trading experiment, not an advantage, alpha, or validated biological mechanism.
