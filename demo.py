@@ -11,7 +11,7 @@ def main() -> None:
     nx.set_edge_attributes(graph, 1.0, "weight")
     nodes = list(graph.nodes)
     adjacency = normalized_adjacency(graph, nodes)
-    regime = np.repeat([0, 1, 0, 1], 250)
+    regime = np.tile(np.repeat([0, 1], 125), 4)
     returns = rng.normal(scale=np.where(regime == 1, 2.0, 0.6))
     features = np.column_stack([returns, np.abs(returns)])
     weights = rng.normal(scale=0.15, size=(len(nodes), features.shape[1]))
