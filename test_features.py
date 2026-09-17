@@ -1,3 +1,4 @@
+import pytest
 import pandas as pd
 from features import load_feature_csv
 
@@ -10,3 +11,10 @@ def test_loader_sorts_and_validates(tmp_path):
     }).to_csv(path, index=False)
     result = load_feature_csv(str(path))
     assert result.timestamp.is_monotonic_increasing
+
+
+def test_loader_rejects_missing_columns(tmp_path):
+    path = tmp_path / "bad.csv"
+    pd.DataFrame({"timestamp": ["2026-01-01"], "return": [0.1]}).to_csv(path, index=False)
+    with pytest.raises(ValueError):
+        load_feature_csv(str(path))
