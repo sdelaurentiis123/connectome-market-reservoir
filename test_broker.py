@@ -1,6 +1,6 @@
 import numpy as np
-from connectome_market.backtest import run_long_flat
-from connectome_market.broker import PaperBroker
+from backtest import run_long_flat
+from broker import PaperBroker
 
 def test_broker_round_trip_tracks_pnl():
     broker = PaperBroker(cash=1000, fee_bps=0, slippage_bps=0)
